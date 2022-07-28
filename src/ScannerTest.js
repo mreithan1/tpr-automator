@@ -128,14 +128,14 @@ const ScannerTest = (props) => {
     Quagga.stop();
   };
  
-  return <div>
+  return ( <div>
     <h3>Barcode scanner in React - <a href="https://www.cluemediator.com/" target="_blank" rel="noopener">Clue Mediator</a></h3>
     <button onClick={() => setIsStart(prevStart => !prevStart)} style={{ marginBottom: 20 }}>{isStart ? 'Stop' : 'Start'}</button>
     {isStart && <React.Fragment>
       <div id="scanner-container" />
       <span>Barcode: {barcode}</span>
     </React.Fragment>}
-  </div>
+  </div> );
 }
  
 export default ScannerTest;
