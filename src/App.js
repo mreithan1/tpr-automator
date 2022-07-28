@@ -3,7 +3,7 @@ import Automator from './Automator';
 import Lists from './Lists';
 import About from './About';
 import ScannerTest from "./ScannerTest";
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { HashRouter as Router, Routes, Route} from 'react-router-dom';
 import {
     Collapse,
     Navbar,
