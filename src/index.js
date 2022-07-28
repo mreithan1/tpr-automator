@@ -12,7 +12,7 @@ root.render(
         <React.StrictMode>
             <HashRouter>
                 <App />
-            <HashRouter>
+            </HashRouter>
         </React.StrictMode>
 );
 
