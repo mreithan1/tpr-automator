@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/mreithan1/tpr-automator.github.io/static/css/main.24b68c36.css",
-    "main.js": "/mreithan1/tpr-automator.github.io/static/js/main.36dbfafb.js",
-    "static/js/787.cda612ba.chunk.js": "/mreithan1/tpr-automator.github.io/static/js/787.cda612ba.chunk.js",
-    "static/media/clipboard.svg": "/mreithan1/tpr-automator.github.io/static/media/clipboard.6c28d2e41fd773dc44f724aaa7958f2c.svg",
-    "index.html": "/mreithan1/tpr-automator.github.io/index.html",
-    "main.24b68c36.css.map": "/mreithan1/tpr-automator.github.io/static/css/main.24b68c36.css.map",
-    "main.36dbfafb.js.map": "/mreithan1/tpr-automator.github.io/static/js/main.36dbfafb.js.map",
-    "787.cda612ba.chunk.js.map": "/mreithan1/tpr-automator.github.io/static/js/787.cda612ba.chunk.js.map"
+    "main.css": "/mreithan1.github.io/tpr-automator/static/css/main.24b68c36.css",
+    "main.js": "/mreithan1.github.io/tpr-automator/static/js/main.e7c5f1be.js",
+    "static/js/787.cda612ba.chunk.js": "/mreithan1.github.io/tpr-automator/static/js/787.cda612ba.chunk.js",
+    "static/media/clipboard.svg": "/mreithan1.github.io/tpr-automator/static/media/clipboard.6c28d2e41fd773dc44f724aaa7958f2c.svg",
+    "index.html": "/mreithan1.github.io/tpr-automator/index.html",
+    "main.24b68c36.css.map": "/mreithan1.github.io/tpr-automator/static/css/main.24b68c36.css.map",
+    "main.e7c5f1be.js.map": "/mreithan1.github.io/tpr-automator/static/js/main.e7c5f1be.js.map",
+    "787.cda612ba.chunk.js.map": "/mreithan1.github.io/tpr-automator/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.24b68c36.css",
-    "static/js/main.36dbfafb.js"
+    "static/js/main.e7c5f1be.js"
   ]
 }
