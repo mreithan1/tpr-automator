@@ -52,16 +52,14 @@ const NavigatorAssistant = (args) =>{
 function App() {
   return (
     <div className="App">
-        <Router>
             <NavigatorAssistant />
             <Routes>
-                <Route exact path='tpr-automator/' element={<Home />} />
-                <Route exact path='tpr-automator/automator' element={<Automator />} />
-                <Route exact path='tpr-automator/lists' element={<Lists />} />
-                <Route exact path='tpr-automator/about' element={<About />} />
-                <Route exact path='tpr-automator/devscanner' element={<ScannerTest />} />
+                <Route exact path='/' element={<Home />} />
+                <Route exact path='/automator' element={<Automator />} />
+                <Route exact path='/lists' element={<Lists />} />
+                <Route exact path='/about' element={<About />} />
+                <Route exact path='/devscanner' element={<ScannerTest />} />
             </Routes>
-        </Router>
     </div>
   );
 }
