@@ -17,8 +17,6 @@ import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ClipboardIcon from './assets/vectors/clipboard.svg'
 
-const webdomain = "tpr-automator";
-
 const NavigatorAssistant = (args) =>{
     const [navbarIsOpen, navbarSetIsOpen] = useState(false);
 
@@ -57,11 +55,11 @@ function App() {
         <Router>
             <NavigatorAssistant />
             <Routes>
-                <Route exact path='{webdomain}/' element={<Home />} />
-                <Route exact path='{webdomain}/automator' element={<Automator />} />
-                <Route exact path='{webdomain}/lists' element={<Lists />} />
-                <Route exact path='{webdomain}/about' element={<About />} />
-                <Route exact path='{webdomain}/devscanner' element={<ScannerTest />} />
+                <Route exact path='tpr-automator/' element={<Home />} />
+                <Route exact path='tpr-automator/automator' element={<Automator />} />
+                <Route exact path='tpr-automator/lists' element={<Lists />} />
+                <Route exact path='tpr-automator/about' element={<About />} />
+                <Route exact path='tpr-automator/devscanner' element={<ScannerTest />} />
             </Routes>
         </Router>
     </div>
