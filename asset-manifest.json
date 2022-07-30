@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/tpr-automator/static/css/main.a3dd1049.css",
-    "main.js": "/tpr-automator/static/js/main.1915a290.js",
+    "main.css": "/tpr-automator/static/css/main.b1e037a5.css",
+    "main.js": "/tpr-automator/static/js/main.7b57e174.js",
     "static/js/787.cda612ba.chunk.js": "/tpr-automator/static/js/787.cda612ba.chunk.js",
     "static/media/clipboard.svg": "/tpr-automator/static/media/clipboard.6c28d2e41fd773dc44f724aaa7958f2c.svg",
     "index.html": "/tpr-automator/index.html",
-    "main.a3dd1049.css.map": "/tpr-automator/static/css/main.a3dd1049.css.map",
-    "main.1915a290.js.map": "/tpr-automator/static/js/main.1915a290.js.map",
+    "main.b1e037a5.css.map": "/tpr-automator/static/css/main.b1e037a5.css.map",
+    "main.7b57e174.js.map": "/tpr-automator/static/js/main.7b57e174.js.map",
     "787.cda612ba.chunk.js.map": "/tpr-automator/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a3dd1049.css",
-    "static/js/main.1915a290.js"
+    "static/css/main.b1e037a5.css",
+    "static/js/main.7b57e174.js"
   ]
 }
