@@ -8,11 +8,18 @@ import {
 
 class Scanner extends Component{
     
-    componentDidMount(){
+    constructor(props){
+        super(props);
+        this.state = {
+            barcodeResult : 0,
+            renderVideo: true
+        };
         
-        this.setState({
-            barcodeResult : 0
-        });
+        this.destroyVideo = this.destroyVideo.bind(this);
+        this.detected = this.detected.bind(this);
+    }
+    
+    componentDidMount(){
         
         Quagga.init({
             'inputStream' : {
@@ -106,17 +113,30 @@ class Scanner extends Component{
         Quagga.onDetected(this.detected);
     };
     
-    detected = res => {
+    destroyVideo(){
+        this.setState({ renderVideo : false });
+    }
+    
+    detected(res) {
         this.setState({ barcodeResult : res.codeResult.code });
         console.log("Barcode detected: ", this.state.barcodeResult);
         Quagga.stop();
+        this.destroyVideo();
+        this.props.onChange(res.codeResult.code);
     };
     
+    
     render(){
+        var doVideoRender = this.state.renderVideo;
         return (
-                <div id="interactive" className="viewport">
-                    <video className="videoCamera" autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video>
-                    <canvas className="drawingBuffer"></canvas>
+                <div>
+                    { doVideoRender ? (
+                            <div id="interactive" className="viewport">
+                                <video className="videoCamera" autoPlay="true" preload="auto" src="" muted="true" playsInLine="true"></video>
+                                <canvas className="drawingBuffer"></canvas>
+                            </div>
+                    ) : null}
+                    <p>{this.state.barcodeResult}</p>
                 </div>
         );
     }
