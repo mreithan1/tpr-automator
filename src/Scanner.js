@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import Quagga from 'quagga';
 
 function Scanner(props){
-    const onDetected = props;
     
     let barcodeResult = 0;
     
@@ -100,11 +99,14 @@ function Scanner(props){
     }, []);
     
     const detected = res => {
-        onDetected(res.codeResult.code);
+        barcodeResult = res.codeResult.code;
     };
     
     return (
-        <div id="interactive" className="viewport"/>
+        <div>
+            <div id="interactive" className="viewport"/>
+            <p>{barcodeResult}</p>
+        </div>
     );
 }
 
