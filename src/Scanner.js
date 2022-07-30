@@ -100,6 +100,8 @@ function Scanner(props){
     
     const detected = res => {
         barcodeResult = res.codeResult.code;
+        console.log("Barcode detected: ", barcodeResult);
+        Quagga.stop();
     };
     
     return (
