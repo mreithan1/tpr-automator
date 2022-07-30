@@ -3,6 +3,7 @@ import Automator from './Automator';
 import Lists from './Lists';
 import About from './About';
 import ScannerTest from "./ScannerTest";
+import Scanner from "./Scanner";
 import { Route, Routes } from 'react-router-dom';
 import {
     Collapse,
@@ -40,7 +41,10 @@ const NavigatorAssistant = (args) =>{
                                 <NavLink href="#/about/" > About </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#/devscanner/" > ScannerTest </NavLink>
+                                <NavLink href="#/scanner/" > Scanner_Element </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="#/devscanner/" > Scanner_dev_Test </NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -61,6 +65,7 @@ function App() {
                         <Route exact path='/lists' element={<Lists />} />
                         <Route exact path='/about' element={<About />} />
                         <Route exact path='/devscanner' element={<ScannerTest />} />
+                        <Route exact path='/scanner' element={<Scanner />} />
                     </Routes>
                 </Router>
     </div>

@@ -4,16 +4,18 @@ import Quagga from 'quagga';
 function Scanner(props){
     const onDetected = props;
     
+    let barcodeResult = 0;
+    
     useEffect(() => {
         Quagga.init({
             'inputStream' : {
-                'type' : 'LiveStream',
+                "type" : "LiveStream",
+//                'target' : 'scannerWindow',
                 'constraints' : {
                     'width' : { 'min' : 450 },
                     'height' : { 'min' : 300 },
                     'facingMode' : 'environment',
-                    'aspectRatio' : { 'min' : 1, 'max' : 2},
-                    'target' : '#scannerWindow'
+                    'aspectRatio' : { 'min' : 1, 'max' : 2}
                 }
             },
             'locator' : {
@@ -72,7 +74,8 @@ function Scanner(props){
                             { x : 0, y : 1 },
                             drawingCtx,
                             {
-                                color : "#00F"
+                                color : "#00F",
+                                lineWidth : 2
                             }
                     );
                 }
@@ -83,7 +86,8 @@ function Scanner(props){
                             { x : 'x', y : 'y'},
                             drawingCtx,
                             {
-                                color : "#F00"
+                                color : "#F00",
+                                lineWidth : 3
                             }
                         );
                 
@@ -100,7 +104,7 @@ function Scanner(props){
     };
     
     return (
-        <div id="scannerWindow" classname="scannerCam" />
+        <div id="interactive" className="viewport"/>
     );
 }
 
