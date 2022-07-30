@@ -72,7 +72,7 @@ function Scanner(props){
                             { x : 0, y : 1 },
                             drawingCtx,
                             {
-                                color : '#00F'
+                                color : "#00F"
                             }
                     );
                 }
@@ -83,7 +83,7 @@ function Scanner(props){
                             { x : 'x', y : 'y'},
                             drawingCtx,
                             {
-                                color : '#F00'
+                                color : "#F00"
                             }
                         );
                 
