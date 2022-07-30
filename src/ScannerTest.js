@@ -9,8 +9,8 @@ const ScannerTest = props => {
   "inputStream": {
     "type": "LiveStream",
     "constraints": {
-      "width": { "min": 450 },
-      "height": { "min": 300 },
+      "width": { "min": 640 },
+      "height": { "min": 480 },
       "facingMode": "environment",
       "aspectRatio": { "min": 1, "max": 2 }
     }

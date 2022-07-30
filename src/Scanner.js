@@ -1,11 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { Component } from 'react';
 import Quagga from 'quagga';
+import "./assets/scanner.css"
+import 'bootstrap/dist/css/bootstrap.css';
+import {
+    Button
+} from 'reactstrap';
 
-function Scanner(props){
+class Scanner extends Component{
     
-    let barcodeResult = 0;
-    
-    useEffect(() => {
+    componentDidMount(){
+        
+        this.setState({
+            barcodeResult : 0
+        });
+        
         Quagga.init({
             'inputStream' : {
                 "type" : "LiveStream",
@@ -95,21 +103,23 @@ function Scanner(props){
             }
         });
         
-        Quagga.onDetected(detected);
-    }, []);
+        Quagga.onDetected(this.detected);
+    };
     
-    const detected = res => {
-        barcodeResult = res.codeResult.code;
-        console.log("Barcode detected: ", barcodeResult);
+    detected = res => {
+        this.setState({ barcodeResult : res.codeResult.code });
+        console.log("Barcode detected: ", this.state.barcodeResult);
         Quagga.stop();
     };
     
-    return (
-        <div>
-            <div id="interactive" className="viewport"/>
-            <p>{barcodeResult}</p>
-        </div>
-    );
+    render(){
+        return (
+                <div id="interactive" className="viewport">
+                    <video className="videoCamera" autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video>
+                    <canvas className="drawingBuffer"></canvas>
+                </div>
+        );
+    }
 }
 
 export default Scanner
