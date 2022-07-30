@@ -16,7 +16,7 @@ import {
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ClipboardIcon from './assets/vectors/clipboard.svg'
-import { HashRouter } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 
 const NavigatorAssistant = (args) =>{
     const [navbarIsOpen, navbarSetIsOpen] = useState(false);
@@ -26,21 +26,21 @@ const NavigatorAssistant = (args) =>{
     return (
             <div>
                 <Navbar {...args}>
-                    <NavbarBrand href="/#/tpr-automator"><img src={ClipboardIcon} alt="logo" style={{ height: 40, width:40 }}/>TPR Automator</NavbarBrand>
+                    <NavbarBrand href="#/"><img src={ClipboardIcon} alt="logo" style={{ height: 40, width:40 }}/>TPR Automator</NavbarBrand>
                     <NavbarToggler onClick={toggle}/>
                     <Collapse isOpen={navbarIsOpen} navbar>
                         <Nav className="mr-auto" navbar>
                             <NavItem>
-                                <NavLink href="/#/tpr-automator/automator/" > Create TPR List </NavLink>
+                                <NavLink href="#/automator/" > Create TPR List </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/#/tpr-automator/lists/" > View TPR Lists </NavLink>
+                                <NavLink href="#/lists/" > View TPR Lists </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/#/tpr-automator/about/" > About </NavLink>
+                                <NavLink href="#/about/" > About </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/#/tpr-automator/devscanner/" > ScannerTest </NavLink>
+                                <NavLink href="#/devscanner/" > ScannerTest </NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -53,7 +53,7 @@ const NavigatorAssistant = (args) =>{
 function App() {
   return (
     <div className="App">
-                <HashRouter basename="tpr-automator">
+                <Router>
                     <NavigatorAssistant />
                     <Routes>
                         <Route exact path='/' element={<Home />} />
@@ -62,7 +62,7 @@ function App() {
                         <Route exact path='/about' element={<About />} />
                         <Route exact path='/devscanner' element={<ScannerTest />} />
                     </Routes>
-                </HashRouter>
+                </Router>
     </div>
   );
 }
