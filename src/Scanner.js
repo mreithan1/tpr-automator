@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Quagga from 'quagga';
-import "./assets/scanner.css"
+import "./assets/css/scanner.css"
 import 'bootstrap/dist/css/bootstrap.css';
 import {
     Button
@@ -17,6 +17,7 @@ class Scanner extends Component{
         
         this.destroyVideo = this.destroyVideo.bind(this);
         this.detected = this.detected.bind(this);
+        this.cancelVideoStream = this.cancelVideoStream.bind(this);
     }
     
     componentDidMount(){
@@ -26,7 +27,7 @@ class Scanner extends Component{
                 "type" : "LiveStream",
 //                'target' : 'scannerWindow',
                 'constraints' : {
-                    'width' : { 'min' : 450 },
+                    'width' : { 'min' : 100 },
                     'height' : { 'min' : 300 },
                     'facingMode' : 'environment',
                     'aspectRatio' : { 'min' : 1, 'max' : 2}
@@ -117,6 +118,12 @@ class Scanner extends Component{
         this.setState({ renderVideo : false });
     }
     
+    cancelVideoStream(){
+        Quagga.stop();
+        this.destroyVideo();
+        this.props.onCancel();
+    }
+    
     detected(res) {
         this.setState({ barcodeResult : res.codeResult.code });
         console.log("Barcode detected: ", this.state.barcodeResult);
@@ -132,11 +139,12 @@ class Scanner extends Component{
                 <div>
                     { doVideoRender ? (
                             <div id="interactive" className="viewport">
+                                <p>{this.state.barcodeResult}</p>
                                 <video className="videoCamera" autoPlay="true" preload="auto" src="" muted="true" playsInLine="true"></video>
                                 <canvas className="drawingBuffer"></canvas>
+                                <Button color="danger" onClick={this.cancelVideoStream}>Cancel</Button>
                             </div>
                     ) : null}
-                    <p>{this.state.barcodeResult}</p>
                 </div>
         );
     }
