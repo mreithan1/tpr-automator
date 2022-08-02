@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { 
     FormGroup,
     Form,
@@ -14,8 +14,14 @@ import {
     AccordionHeader, 
     AccordionItem,
     Fade,
-    Table
+    Table,
+    Spinner,
+    Toast,
+    ToastHeader,
+    ToastBody,
+    Alert
 } from 'reactstrap';
+import { CSVDownload, CSVLink } from "react-csv";
 import Scanner from './Scanner';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -173,22 +179,7 @@ class TPRForm extends Component {
 class TPRList extends Component{
     constructor(props){
         super(props);
-        
-        /* FUCK THIS JSXIFY BULLSHIT */
-//        this.JSXifyData = this.JSXifyData.bind(this);
     }
-    
-//    JSXifyData(){
-//        let data = this.props.data;
-//        console.log(data);
-//        let JSXToBeRendered = React.element;
-//        for (let i = 0; i<data.length; i++){
-//            console.log(data[i]);
-//            JSXToBeRendered += <tr><td scope="row">{data[i].name}</td><th>{data[i].upc}</th><td>{data[i].date}</td><td>{data[i].quantity}</td></tr>
-//        }
-//        console.log(JSXToBeRendered);
-//        return(JSXToBeRendered);
-//    }
     
     render(){
         return(
@@ -227,20 +218,162 @@ class TPRList extends Component{
 }
 
 
+function DownloadLink(props){
+    const csvLink = React.useRef();
+    
+    useEffect(() => {
+        csvLink.current.link.click();
+    }, [])
+    return(
+        <CSVLink
+            data={props.data}
+            headers={props.headers}
+            filename={props.filename}
+            ref={csvLink}
+        />
+    );
+}
+
+
+class DownloadComponent extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            downloadIsOpen: false,
+            downloadIsReady: false,
+            fileName: "",
+            disableDownloadButton: false,
+            toastIsOpen: false,
+            filenameIsValid: false
+        };
+        this.headers = [
+            { label: "Product Name", key: "name" },
+            { label: "Product Code", key: "upc" },
+            { label: "Expiration Date", key: "date" },
+            { label: "Quantity", key: "quantity" }
+        ];
+        this.currentDate = new Date();
+        this.date = `${this.currentDate.getMonth()+1}_${this.currentDate.getDate()}_${this.currentDate.getFullYear()}`;
+        
+        this.data = this.props.data;
+        
+        this.toggleDownloadToast = this.toggleDownloadToast.bind(this);
+        this.updateFilename = this.updateFilename.bind(this);
+        this.initDownload = this.initDownload.bind(this);
+    }
+    
+    componentDidMount(){
+        this.setState({
+            fileName: `${this.date}_tprExport.csv`
+        });
+    }
+    
+    toggleDownloadToast(){
+        this.setState({
+            downloadIsOpen: !this.state.downloadIsOpen,
+            disableDownloadButton: !this.state.downloadIsOpen
+        });
+        this.props.onToggle();
+    }
+    
+    updateFilename(event){
+        let value = event.target.value;
+        this.setState({
+            fileName : value
+        });
+        
+    }
+    
+    appendCSVExtension(){
+        let newFileName = this.state.fileName + ".csv"
+            this.setState({
+                fileName: newFileName
+            });
+    }
+    
+    initDownload(){
+        if (!this.state.fileName.endsWith(".csv")){
+            this.appendCSVExtension();
+        }
+        this.setState({
+            downloadIsReady: true
+        });
+//        setTimeout(()=>{this.setState({downloadIsReady:false});}, 1000)
+        console.log("Downloading file as " + this.state.fileName);
+        setTimeout(()=>{this.toggleDownloadToast();}, 100);
+    }
+    
+    download(){
+        if (this.state.downloadIsReady){
+            this.setState({
+                downloadIsReady: false
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    render(){
+        return(
+            <div>
+                <Button color="success" onClick={this.toggleDownloadToast} disabled={this.state.disableDownloadButton}>
+                    Download { this.state.disableDownloadButton ? (<Spinner/>) : null}
+                </Button>
+                { this.state.downloadIsOpen ? (
+                    <Toast isOpen={this.state.downloadIsOpen}>
+                        <ToastHeader toggle={this.toggleDownloadToast}>Download as CSV</ToastHeader>
+                        <ToastBody>
+                            <Form>
+                                <Alert color="danger" hidden={this.state.fileName.length ? (true):(false)}>Filename cannot be blank</Alert>
+                                <FormGroup floating>
+                                    <Input
+                                        id="filenameInput"
+                                        name="fileName"
+                                        placeholder="Filename"
+                                        type="text"
+                                        onChange={this.updateFilename}
+                                        value={this.state.fileName}
+                                    />
+                                    <Label for="filenameInput">Filename</Label>
+                                </FormGroup>
+                                <Button onClick={this.initDownload} disabled={!this.state.fileName.length ? (true):(false)}>Download</Button>
+                            </Form>
+                            {
+                                this.download() ? (
+                                    <DownloadLink data={this.data} headers={this.headers} filename={this.state.fileName}/>
+                                ) : null
+                            }
+                        </ToastBody>
+                    </Toast>
+                ):null}
+            </div>
+        );
+    }
+    
+}
+
+
 class Automator extends Component {
     constructor(props){
         super(props);
         this.state = {
             currentTprList : [],
-            modalIsOpen: false
+            modalIsOpen: false,
+            downloadManagerIsOpen: false
         };
         this.handleFormComplete = this.handleFormComplete.bind(this);
         this.toggleFormModal = this.toggleFormModal.bind(this);
+        this.isData = this.isData.bind(this);
+        this.toggleDownloadManager = this.toggleDownloadManager.bind(this);
     }
     
     handleFormComplete(formData){
         this.setState({
             currentTprList: this.state.currentTprList.concat(formData)
+        });
+        this.setState({
+            modalIsOpen : false
         });
     }
     
@@ -250,11 +383,31 @@ class Automator extends Component {
         });
     }
     
+    toggleDownloadManager(){
+        this.setState({
+            downloadManagerIsOpen: !this.state.downloadManagerIsOpen
+        });
+    }
+    
+    isData(){
+        if (this.state.currentTprList.length <= 0){
+            return false;
+        } else {
+            return true;
+        }
+//        return(true); // DEVELOPER
+    }
+    
     render(){
         return (
         <div>
             <div className="App">
-              <Button color="primary" onClick={this.toggleFormModal}>+</Button>
+              <Button color="primary" onClick={this.toggleFormModal} disabled={this.state.downloadManagerIsOpen}>New</Button>
+              {
+                    this.isData() ? (
+                        <DownloadComponent data={this.state.currentTprList} onToggle={this.toggleDownloadManager}/>
+                    ) : null
+                }
               <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleFormModal}>
                   <ModalHeader toggle={this.toggleFormModal}>Add new TPR...</ModalHeader>
                   <ModalBody>

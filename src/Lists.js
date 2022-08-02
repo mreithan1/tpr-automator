@@ -1,7 +1,7 @@
 function Lists() {
   return (
     <div className="App">
-    Lists
+    Coming Soon: Importing existing _tprExport.csv files and viewing contents
     </div>
   );
 }
