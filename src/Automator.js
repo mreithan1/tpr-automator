@@ -23,6 +23,8 @@ import {
 } from 'reactstrap';
 import { CSVDownload, CSVLink } from "react-csv";
 import Scanner from './Scanner';
+//import TrashSVG from './assets/vectors/trash.svg'
+import './assets/css/automator.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 
@@ -50,6 +52,14 @@ class TPRForm extends Component {
         this.enableBarcodeScanner = this.enableBarcodeScanner.bind(this);
         this.handleBarcodeReaderCancel = this.handleBarcodeReaderCancel.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+    }
+    
+    componentDidMount(){
+        if (this.props.edit){
+            this.setState({
+                formData:[this.props.data]
+            });
+        };
     }
     
     handleBarcodeDetect(value) {
@@ -166,6 +176,7 @@ class TPRForm extends Component {
                     <Label for="quantityInput">
                         Number of Items
                     </Label>
+        
                 </FormGroup>
                 <Button type="submit" color="primary">
                     Submit
@@ -179,6 +190,22 @@ class TPRForm extends Component {
 class TPRList extends Component{
     constructor(props){
         super(props);
+        this.state = {popIndex:0};
+        this.onDelete = this.onDelete.bind(this);
+        this.onEdit = this.onEdit.bind(this);
+    }
+    
+    onDelete(evt){
+        let target = evt.target.parentElement.parentElement.rowIndex - 1;
+        console.log(target);
+        this.setState({popIndex:target});
+        this.props.onDelete(target);
+    }
+    
+    onEdit(evt){
+        let target = evt.target.parentElement.parentElement.rowIndex - 1;
+        console.log(target);
+        this.props.onEdit(target);
     }
     
     render(){
@@ -202,12 +229,16 @@ class TPRList extends Component{
                 </thead>
                 <tbody>
                     {this.props.data.map(
-                        d => (
-                            <tr>
+                        (d, index) => (
+                            <tr key={index}>
                                 <td>{d.name}</td>
                                 <td>{d.upc}</td>
                                 <td>{d.date}</td>
                                 <td>{d.quantity}</td>
+                                <td>
+                                    <Button onClick={this.onDelete} color="danger">Delete</Button>
+                                    <Button onClick={this.onEdit} color="warning">Edit</Button>
+                                </td>
                             </tr>
                         )
                     )}
@@ -220,10 +251,9 @@ class TPRList extends Component{
 
 function DownloadLink(props){
     const csvLink = React.useRef();
-    
     useEffect(() => {
         csvLink.current.link.click();
-    }, [])
+    }, []);
     return(
         <CSVLink
             data={props.data}
@@ -255,7 +285,7 @@ class DownloadComponent extends Component {
         this.currentDate = new Date();
         this.date = `${this.currentDate.getMonth()+1}_${this.currentDate.getDate()}_${this.currentDate.getFullYear()}`;
         
-        this.data = this.props.data;
+        this.data = [];
         
         this.toggleDownloadToast = this.toggleDownloadToast.bind(this);
         this.updateFilename = this.updateFilename.bind(this);
@@ -266,6 +296,7 @@ class DownloadComponent extends Component {
         this.setState({
             fileName: `${this.date}_tprExport.csv`
         });
+        console.log(this.data);
     }
     
     toggleDownloadToast(){
@@ -285,13 +316,14 @@ class DownloadComponent extends Component {
     }
     
     appendCSVExtension(){
-        let newFileName = this.state.fileName + ".csv"
+        let newFileName = this.state.fileName + ".csv";
             this.setState({
                 fileName: newFileName
             });
     }
     
     initDownload(){
+        this.data = this.props.getData;
         if (!this.state.fileName.endsWith(".csv")){
             this.appendCSVExtension();
         }
@@ -300,6 +332,7 @@ class DownloadComponent extends Component {
         });
 //        setTimeout(()=>{this.setState({downloadIsReady:false});}, 1000)
         console.log("Downloading file as " + this.state.fileName);
+        console.log(`Sending Data:${this.state.currentTprList}`);
         setTimeout(()=>{this.toggleDownloadToast();}, 100);
     }
     
@@ -360,12 +393,24 @@ class Automator extends Component {
         this.state = {
             currentTprList : [],
             modalIsOpen: false,
-            downloadManagerIsOpen: false
+            downloadManagerIsOpen: false,
+            editing: false,
+            editingIndex: 0
         };
         this.handleFormComplete = this.handleFormComplete.bind(this);
         this.toggleFormModal = this.toggleFormModal.bind(this);
         this.isData = this.isData.bind(this);
         this.toggleDownloadManager = this.toggleDownloadManager.bind(this);
+        this.returnData = this.returnData.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.onEdit = this.onEdit.bind(this);
+        this.editingCheck = this.editingCheck.bind(this);
+        this.handleFormEdit = this.handleFormEdit.bind(this);
+        this.tprListRef = React.createRef();
+    }
+    
+    componentDidMount(){
+        console.log(this.tprListRef);
     }
     
     handleFormComplete(formData){
@@ -375,6 +420,8 @@ class Automator extends Component {
         this.setState({
             modalIsOpen : false
         });
+        console.log("new tpr data");
+        console.log(this.state.currentTprList);
     }
     
     toggleFormModal(){
@@ -398,25 +445,79 @@ class Automator extends Component {
 //        return(true); // DEVELOPER
     }
     
+    returnData(){
+        return(this.state.currentTprList);
+    }
+    
+    onDelete(index){
+        console.log(this.state.currentTprList.filter(item => item === item !== this.state.currentTprList[index]));
+        this.setState({
+            currentTprList: this.state.currentTprList.filter(item => item !== this.state.currentTprList[index])
+        });
+    }
+    
+    onEdit(index){
+        this.setState({
+            isEditing: true,
+            editingIndex: index
+        });
+        this.toggleFormModal();
+    }
+    
+    editingCheck(){
+        if (this.state.isEditing){
+            console.log(true);
+            return true;
+        } else {
+            console.log(false);
+            return false;
+        }
+    }
+    
+    handleFormEdit(formData){
+        let newTprState = this.state.currentTprList;
+        newTprState[this.state.editingIndex]=formData;
+        
+        this.setState({
+            currentTprList: newTprState
+        });
+        this.setState({
+            modalIsOpen: false,
+            isEditing: false
+        });
+        console.log("new tpr data");
+        console.log(this.state.currentTprList);
+    }
+    
     render(){
         return (
         <div>
             <div className="App">
               <Button color="primary" onClick={this.toggleFormModal} disabled={this.state.downloadManagerIsOpen}>New</Button>
-              {
+                {
                     this.isData() ? (
-                        <DownloadComponent data={this.state.currentTprList} onToggle={this.toggleDownloadManager}/>
+                        <DownloadComponent getData={this.returnData()} onToggle={this.toggleDownloadManager}/>
                     ) : null
                 }
-              <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleFormModal}>
-                  <ModalHeader toggle={this.toggleFormModal}>Add new TPR...</ModalHeader>
-                  <ModalBody>
-                      <TPRForm updateFormData={this.handleFormComplete}/>
-                  </ModalBody>
-              </Modal>
+                {   this.editingCheck() ? (
+                        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleFormModal}>
+                            <ModalHeader toggle={this.toggleFormModal}>Add new TPR...</ModalHeader>
+                            <ModalBody>
+                                <TPRForm updateFormData={this.handleFormEdit} edit={true} data={this.state.currentTprList[this.getEditingIndex]}/>
+                            </ModalBody>
+                        </Modal>
+                    ) : (
+                        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleFormModal}>
+                            <ModalHeader toggle={this.toggleFormModal}>Add new TPR...</ModalHeader>
+                            <ModalBody>
+                                <TPRForm updateFormData={this.handleFormComplete}/>
+                            </ModalBody>
+                        </Modal>
+                    )
+                }
             </div>
             <div>
-                <TPRList data={this.state.currentTprList}/>
+                <TPRList ref={this.tprListRef} onEdit={this.onEdit} onDelete={this.onDelete} data={this.state.currentTprList}/>
             </div>
         </div>
         );
